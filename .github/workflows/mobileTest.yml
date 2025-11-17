@@ -6,6 +6,10 @@ on:
 
   workflow_dispatch:
 
+# ADICIONE ESTAS LINHAS AQUI:
+permissions:
+  contents: write  # Permite escrever no repositório (criar/atualizar branch gh-pages)
+
 jobs:
   test:
     runs-on: ubuntu-latest
