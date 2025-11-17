@@ -22,6 +22,7 @@ export let sauceConf = {
         }
     ] : [
         {
+            platformName: 'iOS',
             'appium:app': 'storage:filename=LojaEBAC.ipa', // The filename of the mobile app
             'appium:deviceName': 'iPhone.*',
             'appium:platformVersion': '17',
