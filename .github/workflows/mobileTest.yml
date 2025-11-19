@@ -1,0 +1,43 @@
+name: EBAC CI Mobile
+
+on:
+  push:
+    branches: [ IOS.ci ]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '21'
+
+      - name: Install Dependencies
+        run: npm i
+
+      - name: Run Tests
+        env:
+          ENVIRONMENT: saucelabs
+          PLATFORM: iOS
+          REPORTER: true
+          SAUCE_USERNAME: ${{ secrets.SAUCE_USERNAME }}
+          SAUCE_ACCESS_KEY: ${{ secrets.SAUCE_ACCESS_KEY }}
+        run: npx wdio run ./config/wdio.conf.js
+
+      - name: Generate Allure Report
+        if: always()
+        run: npx allure generate allure-results --clean -o allure-report
+
+      - name: Publish Report
+        uses: peaceiris/actions-gh-pages@v3
+        if: always()
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./allure-report
